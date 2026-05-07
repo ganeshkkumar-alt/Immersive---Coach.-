@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color Palette Preview</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f0faf6;
+      color: #1a2e25;
+      padding: 40px 32px;
+    }
+
+    h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+    p.sub { font-size: 0.875rem; color: #4a7a62; margin-bottom: 36px; }
+
+    h2 { font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+         letter-spacing: 0.08em; color: #4a7a62; margin-bottom: 14px; margin-top: 36px; }
+
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .swatch {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+    }
+
+    .swatch-color {
+      height: 72px;
+      width: 100%;
+    }
+
+    .swatch-info {
+      background: #fff;
+      padding: 10px 12px;
+    }
+
+    .swatch-info .name {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #1a2e25;
+    }
+
+    .swatch-info .value {
+      font-size: 0.7rem;
+      color: #6b9e84;
+      margin-top: 2px;
+      font-family: monospace;
+    }
+
+    /* ---- gradient row ---- */
+    .gradients {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .grad-swatch {
+      border-radius: 10px;
+      height: 80px;
+      display: flex;
+      align-items: flex-end;
+      padding: 10px 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    }
+
+    .grad-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.92);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* ---- dark mode panel ---- */
+    .dark-panel {
+      background: oklch(0.13 0.015 162);
+      border-radius: 14px;
+      padding: 28px;
+      margin-top: 14px;
+    }
+
+    .dark-panel h2 { color: oklch(0.65 0.18 162); }
+
+    .dark-panel .swatch-info {
+      background: oklch(0.17 0.015 162);
+    }
+
+    .dark-panel .swatch-info .name { color: #e2f5ee; }
+    .dark-panel .swatch-info .value { color: oklch(0.55 0.12 162); }
+
+    /* ---- UI preview ---- */
+    .ui-preview {
+      background: #fff;
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      margin-top: 14px;
+    }
+
+    .btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 18px; }
+
+    .btn {
+      padding: 9px 20px;
+      border-radius: 6px;
+      border: none;
+      cursor: default;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .btn-primary   { background: oklch(0.42 0.15 162); color: #fff; }
+    .btn-secondary { background: oklch(0.92 0.02 162); color: oklch(0.18 0.02 162); }
+    .btn-accent    { background: oklch(0.65 0.18 162); color: #fff; }
+    .btn-outline   { background: transparent; border: 1.5px solid oklch(0.89 0.015 162);
+                     color: oklch(0.42 0.15 162); }
+    .btn-ghost     { background: oklch(0.95 0.01 162); color: oklch(0.42 0.15 162); }
+    .btn-destructive { background: oklch(0.577 0.245 27.325); color: #fff; }
+
+    .card-demo {
+      border: 1px solid oklch(0.89 0.015 162);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+    }
+
+    .card-demo h3 { font-size: 0.95rem; font-weight: 600; color: oklch(0.18 0.02 162); margin-bottom: 6px; }
+    .card-demo p  { font-size: 0.82rem; color: oklch(0.48 0.02 162); line-height: 1.5; }
+
+    .badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .badge {
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .badge-primary   { background: oklch(0.92 0.07 162); color: oklch(0.35 0.15 162); }
+    .badge-accent    { background: oklch(0.88 0.1 162);  color: oklch(0.30 0.15 162); }
+    .badge-muted     { background: oklch(0.95 0.01 162); color: oklch(0.48 0.02 162); }
+
+    .progress-bar {
+      background: oklch(0.92 0.02 162);
+      border-radius: 999px;
+      height: 8px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: oklch(0.65 0.18 162);
+      border-radius: 999px;
+      width: 68%;
+    }
+
+    .sidebar-demo {
+      background: oklch(0.965 0.01 162);
+      border-radius: 10px;
+      padding: 14px 0;
+      margin-top: 18px;
+    }
+
+    .sidebar-item {
+      padding: 9px 18px;
+      font-size: 0.82rem;
+      color: oklch(0.33 0.03 162);
+      cursor: default;
+    }
+
+    .sidebar-item.active {
+      background: oklch(0.42 0.15 162);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .sidebar-item:hover:not(.active) {
+      background: oklch(0.92 0.02 162);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Emerald &amp; Teal Palette</h1>
+  <p class="sub">Replaced blue/indigo → warm emerald/teal across light &amp; dark modes</p>
+
+  <!-- LIGHT MODE -->
+  <h2>Light Mode — Core Tokens</h2>
+  <div class="swatches">
+    <div class="swatch">
+      <div class="swatch-color" style="background:oklch(0.42 0.15 162)"></div>
+      <div class="swatch-info"><div class="name">Primary</div><div class="value">oklch(0.42 0.15 162)</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:oklch(0.65 0.18 162)"></div>
+      <div class="swatch-info"><div class="name">Accent</div><div class="value">oklch(0.65 0.18 162)</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:oklch(0.985 0.003 162)"></div>
+      <div class="swatch-info"><div class="name">Background</div><div class="value">oklch(0.985 0.003 162)</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:oklch(0.18 0.02 162)"></div>
+      <div class="swatch-info"><div class="name">Foreground</div><div class="value">oklch(0.18 0.02 162)</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:oklch(0.92 0.02 162)"></div>
+      <div class="swatch-info"><div class="name">Secondary</div><div class="value">oklch(0.92 0.02 162)</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:oklch(0.95 0.01 162)"></div>
+      <div class="swatch-info"><div class="name">Muted</div><div class="value">oklch(0.95 0.01 162)</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:oklch(0.89 0.015 162)"></div>
+      <div class="swatch-info"><div class="name">Border / Input</div><div class="value">oklch(0.89 0.015 162)</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:oklch(0.577 0.245 27.325)"></div>
+      <div class="swatch-info"><div class="name">Destructive</div><div class="value">oklch(0.577 0.245 27)</div></div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <h2>Chart Colors</h2>
+  <div class="swatches">
+    <div class="swatch">
+      <div class="swatch-color" style="background:oklch(0.65 0.18 162)"></div>
+      <div class="swatch-info"><div class="name">Chart 1</div><div class="value">oklch(0.65 0.18 162)</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:oklch(0.72 0.16 195)"></div>
+      <div class="swatch-info"><div class="name">Chart 2</div><div class="value">oklch(0.72 0.16 195)</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:oklch(0.55 0.14 145)"></div>
+      <div class="swatch-info"><div class="name">Chart 3</div><div class="value">oklch(0.55 0.14 145)</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:oklch(0.78 0.14 110)"></div>
+      <div class="swatch-info"><div class="name">Chart 4</div><div class="value">oklch(0.78 0.14 110)</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:oklch(0.62 0.19 178)"></div>
+      <div class="swatch-info"><div class="name">Chart 5</div><div class="value">oklch(0.62 0.19 178)</div></div>
+    </div>
+  </div>
+
+  <!-- GRADIENTS -->
+  <h2>Gradients</h2>
+  <div class="gradients">
+    <div class="grad-swatch" style="background:linear-gradient(135deg,rgb(16,185,129) 0%,rgb(20,184,166) 100%)">
+      <span class="grad-label">gradient-pharma-1</span>
+    </div>
+    <div class="grad-swatch" style="background:linear-gradient(135deg,rgb(5,150,105) 0%,rgb(15,118,110) 100%)">
+      <span class="grad-label">gradient-pharma-2</span>
+    </div>
+    <div class="grad-swatch" style="background:linear-gradient(135deg,rgb(52,211,153) 0%,rgb(45,212,191) 100%)">
+      <span class="grad-label">gradient-pharma-3</span>
+    </div>
+  </div>
+
+  <!-- DARK MODE -->
+  <h2>Dark Mode — Core Tokens</h2>
+  <div class="dark-panel">
+    <div class="swatches">
+      <div class="swatch">
+        <div class="swatch-color" style="background:oklch(0.65 0.18 162)"></div>
+        <div class="swatch-info"><div class="name">Primary</div><div class="value">oklch(0.65 0.18 162)</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:oklch(0.42 0.15 162)"></div>
+        <div class="swatch-info"><div class="name">Accent</div><div class="value">oklch(0.42 0.15 162)</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:oklch(0.13 0.015 162)"></div>
+        <div class="swatch-info"><div class="name">Background</div><div class="value">oklch(0.13 0.015 162)</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:oklch(0.17 0.015 162)"></div>
+        <div class="swatch-info"><div class="name">Card</div><div class="value">oklch(0.17 0.015 162)</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:oklch(0.23 0.015 162)"></div>
+        <div class="swatch-info"><div class="name">Secondary / Muted</div><div class="value">oklch(0.23 0.015 162)</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:oklch(0.67 0.01 162)"></div>
+        <div class="swatch-info"><div class="name">Muted FG</div><div class="value">oklch(0.67 0.01 162)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UI COMPONENT PREVIEW -->
+  <h2>Component Preview</h2>
+  <div class="ui-preview">
+
+    <div class="card-demo">
+      <h3>AI Coaching Session</h3>
+      <p>Select a persona and scenario to begin your immersive training experience with real-time feedback.</p>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary">Primary</button>
+      <button class="btn btn-secondary">Secondary</button>
+      <button class="btn btn-accent">Accent</button>
+      <button class="btn btn-outline">Outline</button>
+      <button class="btn btn-ghost">Ghost</button>
+      <button class="btn btn-destructive">Destructive</button>
+    </div>
+
+    <div class="badge-row">
+      <span class="badge badge-primary">Emerald</span>
+      <span class="badge badge-accent">Teal</span>
+      <span class="badge badge-muted">Muted</span>
+    </div>
+
+    <div class="sidebar-demo">
+      <div class="sidebar-item active">Dashboard</div>
+      <div class="sidebar-item">AI Coach</div>
+      <div class="sidebar-item">Training</div>
+      <div class="sidebar-item">Knowledge Hub</div>
+    </div>
+
+  </div>
+
+</body>
+</html>
